@@ -50,7 +50,45 @@
     </div>
 
     <script>
-       
+        document.addEventListener("DOMContentLoaded", loadTasks);
+
+function addTask() {
+    const taskInput = document.getElementById("taskInput");
+    const taskText = taskInput.value.trim();
+    if (taskText === "") return;
+
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.push(taskText);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    taskInput.value = "";
+    loadTasks();
+}
+
+function loadTasks() {
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.textContent = task;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "X";
+        deleteButton.onclick = () => removeTask(index);
+
+        li.appendChild(deleteButton);
+        taskList.appendChild(li);
+    });
+}
+
+function removeTask(index) {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+}
     </script>
 </body>
 </html>
